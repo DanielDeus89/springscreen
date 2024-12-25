@@ -1,11 +1,10 @@
-package br.com.damin.springscreen.atividades;
+package br.com.damin.springscreen.atividades.dados;
 
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
-public class Atividade07 {
+public class Atividade08 {
     public static void main(String[] args) {
         List<Produdo> produtos = Arrays.asList(
                 new Produdo("Smartphone", 800.0, "Eletrônicos"),
@@ -18,8 +17,8 @@ public class Atividade07 {
 
         List<Produdo> produtoEletronico = produtos.stream()
                 .filter(p -> Objects.equals(p.getCategoria(), "Eletrônicos"))
-                .filter(q -> q.getPreco() < 1000)
                 .sorted((p1, p2) -> Double.compare(p1.getPreco(), p2.getPreco()))
+                .limit(3)
                 .toList();
 
         produtoEletronico.forEach(System.out::println);

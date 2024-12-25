@@ -1,8 +1,7 @@
-package br.com.damin.springscreen.atividades;
+package br.com.damin.springscreen.atividades.dados;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class Atividade05 {
 

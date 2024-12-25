@@ -1,4 +1,4 @@
-package br.com.damin.springscreen.atividades;
+package br.com.damin.springscreen.atividades.dados;
 
 import java.util.Arrays;
 import java.util.List;
