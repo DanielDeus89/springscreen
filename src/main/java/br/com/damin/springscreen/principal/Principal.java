@@ -2,12 +2,15 @@ package br.com.damin.springscreen.principal;
 
 import br.com.damin.springscreen.model.DadosSerie;
 import br.com.damin.springscreen.model.DadosTemporada;
+import br.com.damin.springscreen.model.Serie;
 import br.com.damin.springscreen.service.ConsumoApi;
 import br.com.damin.springscreen.service.ConverteDados;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class Principal {
     Scanner scanner = new Scanner(System.in);
@@ -78,10 +81,17 @@ public class Principal {
     }
 
     private void listarSeriesBuscadas() {
+        List<Serie> series = new ArrayList<>();
+
+        series = dadosSerie.stream()
+                .map(Serie::new)
+                .toList();
         if (dadosSerie.isEmpty()) {
             System.out.println("Nenhuma série encontrada.");
         } else {
-            dadosSerie.forEach(System.out::println);
+            series.stream()
+                    .sorted(Comparator.comparing(Serie::getGenero))
+                    .forEach(System.out::println);
         }
     }
 
