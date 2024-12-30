@@ -34,6 +34,8 @@ public class Series {
     @OneToMany(mappedBy = "series", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Episodio> episodioList = new ArrayList<>();
 
+
+
     public Series(DadosSerie dadosSerie){
         this.titulo = dadosSerie.titulo();
         this.totalTemporadas = dadosSerie.totalTemporadas();
@@ -47,9 +49,7 @@ public class Series {
         //this.sinopse = TradutorLocal.traduzir(dadosSerie.poster().trim());
     }
 
-    public Series() {
-
-    }
+    public Series() {    }
 
     public Long getId() {
         return Id;

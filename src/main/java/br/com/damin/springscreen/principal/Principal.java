@@ -93,18 +93,14 @@ public class Principal {
     }
 
     private void listarSeriesBuscadas() {
-        List<Series> series = new ArrayList<>();
 
-        series = dadosSerie.stream()
-                .map(Series::new)
-                .toList();
-        if (dadosSerie.isEmpty()) {
-            System.out.println("Nenhuma série encontrada.");
-        } else {
-            series.stream()
-                    .sorted(Comparator.comparing(Series::getGenero))
-                    .forEach(System.out::println);
-        }
+        List<Series> series = serieRepository.findAll();
+
+        series.stream()
+                .sorted(Comparator.comparing(Series::getGenero))
+                .forEach(System.out::println);
+
+        System.out.println(" ");
     }
 
     private void buscarEpisodioPorSerie() {
