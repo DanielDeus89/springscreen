@@ -1,21 +1,40 @@
 package br.com.damin.springscreen.model;
 
-import br.com.damin.springscreen.service.ConsultaChatGPT;
-import br.com.damin.springscreen.service.TradutorLocal;
 import br.com.damin.springscreen.service.traducao.ConsultaMyMemory;
+import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.OptionalDouble;
 
-public class Serie {
+@Entity
+@Table(name = "series")
+
+public class Series {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long Id;
+
+    @Column(unique = true)
     private String titulo;
+
     private Integer totalTemporadas;
+
     private double avaliacao;
+
+    @Enumerated(EnumType.STRING)
     private Categoria genero;
+
     private String atores;
+
     private String poster;
+
     private String sinopse;
 
-    public Serie(DadosSerie dadosSerie){
+    @OneToMany(mappedBy = "series", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Episodio> episodioList = new ArrayList<>();
+
+    public Series(DadosSerie dadosSerie){
         this.titulo = dadosSerie.titulo();
         this.totalTemporadas = dadosSerie.totalTemporadas();
         this.avaliacao = OptionalDouble.of(Double.valueOf(dadosSerie.avaliacao())).orElse(0.0);
@@ -26,6 +45,18 @@ public class Serie {
         //this.sinopse = dadosSerie.sinopse();
         //this.sinopse = ConsultaChatGPT.obterTraducao(dadosSerie.sinopse().trim());
         //this.sinopse = TradutorLocal.traduzir(dadosSerie.poster().trim());
+    }
+
+    public Series() {
+
+    }
+
+    public Long getId() {
+        return Id;
+    }
+
+    public void setId(Long id) {
+        Id = id;
     }
 
     public String getTitulo() {
@@ -82,6 +113,14 @@ public class Serie {
 
     public void setSinopse(String sinopse) {
         this.sinopse = sinopse;
+    }
+
+    public List<Episodio> getEpisodioList() {
+        return episodioList;
+    }
+
+    public void setEpisodioList(List<Episodio> episodioList) {
+        this.episodioList = episodioList;
     }
 
     @Override

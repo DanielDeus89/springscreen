@@ -2,17 +2,21 @@ package br.com.damin.springscreen.principal;
 
 import br.com.damin.springscreen.model.DadosSerie;
 import br.com.damin.springscreen.model.DadosTemporada;
-import br.com.damin.springscreen.model.Serie;
+import br.com.damin.springscreen.model.Series;
+import br.com.damin.springscreen.repository.SerieRepository;
 import br.com.damin.springscreen.service.ConsumoApi;
 import br.com.damin.springscreen.service.ConverteDados;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
-import java.util.stream.Collectors;
 
 public class Principal {
+    private final SerieRepository serieRepository;
     Scanner scanner = new Scanner(System.in);
     private ConsumoApi consumoApi = new ConsumoApi();
     private ConverteDados conversor = new ConverteDados();
@@ -20,6 +24,10 @@ public class Principal {
     private final String API_KEY = "&apikey=6585022c";
 
     private List<DadosSerie> dadosSerie = new ArrayList<>();
+
+    public Principal(SerieRepository serieRepository) {
+        this.serieRepository = serieRepository;
+    }
 
     public void exbirMenu() {
         int opcao = -1;
@@ -58,12 +66,16 @@ public class Principal {
 
     private void buscarSerieWeb() {
         DadosSerie dados = getDadosSerie();
-        if (dados != null) {
-            dadosSerie.add(dados);
-            System.out.println("Série adicionada com sucesso!");
-        } else {
-            System.out.println("Erro ao buscar a série.");
+        Series series = new Series(dados);
+        try{
+            serieRepository.save(series);
         }
+        catch (DataIntegrityViolationException e) {
+            System.out.println("Registro duplicado. Não foi possível inserir.");
+        }
+
+        System.out.println("Série adicionada com sucesso!");
+        System.out.println(series);
     }
 
     private DadosSerie getDadosSerie() {
@@ -81,16 +93,16 @@ public class Principal {
     }
 
     private void listarSeriesBuscadas() {
-        List<Serie> series = new ArrayList<>();
+        List<Series> series = new ArrayList<>();
 
         series = dadosSerie.stream()
-                .map(Serie::new)
+                .map(Series::new)
                 .toList();
         if (dadosSerie.isEmpty()) {
             System.out.println("Nenhuma série encontrada.");
         } else {
             series.stream()
-                    .sorted(Comparator.comparing(Serie::getGenero))
+                    .sorted(Comparator.comparing(Series::getGenero))
                     .forEach(System.out::println);
         }
     }

@@ -1,32 +1,57 @@
 package br.com.damin.springscreen.model;
 
+import jakarta.persistence.*;
 import java.time.LocalDate;
 
+@Entity
+@Table(name = "episodios") // Nome da tabela no banco
 public class Episodio {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private int temporada;
     private String titulo;
     private int numeroEpisodio;
     private double avaliacao;
     private LocalDate dataLancamento;
 
-    public Episodio(Integer numeroTemporada, DadosEpisodio dadosEpisodio) {
-        try{
-            this.temporada = numeroTemporada;
+    @ManyToOne
+    @JoinColumn(name = "series_id", nullable = false) // Chave estrangeira que referencia a tabela Series
+    private Series series;
 
-        }catch(NullPointerException e){
+    // Construtor padrão
+    public Episodio() {
+    }
+
+    public Episodio(Integer numeroTemporada, DadosEpisodio dadosEpisodio, Series series) {
+        try {
+            this.temporada = numeroTemporada;
+        } catch (NullPointerException e) {
             this.temporada = 0;
         }
 
         this.titulo = dadosEpisodio.titulo();
         this.numeroEpisodio = dadosEpisodio.numeroEpisodio();
 
-        try{
+        try {
             this.avaliacao = Double.parseDouble(dadosEpisodio.avaliacao());
-        }catch(Exception e){
+        } catch (Exception e) {
             this.avaliacao = 0.0;
         }
 
         this.dataLancamento = LocalDate.parse(dadosEpisodio.dataLancamento());
+        this.series = series; // Associação com a série
+    }
+
+    // Getters e Setters
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public int getTemporada() {
@@ -67,6 +92,14 @@ public class Episodio {
 
     public void setDataLancamento(LocalDate dataLancamento) {
         this.dataLancamento = dataLancamento;
+    }
+
+    public Series getSeries() {
+        return series;
+    }
+
+    public void setSeries(Series series) {
+        this.series = series;
     }
 
     @Override
